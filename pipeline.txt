@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'Maven'   // Make sure Maven is configured in Jenkins Global Tools
+    }
+
     stages {
 
         stage('PULL') {
@@ -18,16 +22,24 @@ pipeline {
             }
         }
 
-        stage('TEST') {
+        stage('SONARQUBE ANALYSIS') {
             steps {
                 dir('backend') {
-                    sh """
-                    mvn sonar:sonar \
-                      -Dsonar.projectKey=student-add1 \
-                      -Dsonar.projectName=student-add1 \
-                      -Dsonar.host.url=http://13.203.23.135:9000 \
-                      -Dsonar.token=sqp_b099d56de4e50650e04d788aba217abbe11404ea
-                    """
+                    withSonarQubeEnv('SonarQubeServer') {  
+                        sh """
+                        mvn sonar:sonar \
+                          -Dsonar.projectKey=student-add1 \
+                          -Dsonar.projectName=student-add1
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('QUALITY GATE') {
+            steps {
+                timeout(time: 2, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }
