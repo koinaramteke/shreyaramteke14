@@ -29,7 +29,7 @@ pipeline {
                         sh '''
                           mvn sonar:sonar \
                           -Dsonar.projectKey=student-add1 \
-                          -Dsonar.projectName=student-add1 \
+                          -Dsonar.projectName=student-add1 
                         '''
                     }
                 }
