@@ -22,15 +22,15 @@ pipeline {
             }
         }
 
-        stage('SONARQUBE ANALYSIS') {
+        stage('TEST') {
             steps {
                 dir('backend') {
-                    withSonarQubeEnv('SonarQubeServer') {  
-                        sh """
-                        mvn sonar:sonar \
+                    withSonarQubeEnv('sonarqube') {  
+                        sh '''
+                          mvn sonar:sonar \
                           -Dsonar.projectKey=student-add1 \
-                          -Dsonar.projectName=student-add1
-                        """
+                          -Dsonar.projectName=student-add1 \
+                        '''
                     }
                 }
             }
